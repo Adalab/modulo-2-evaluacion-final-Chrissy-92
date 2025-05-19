@@ -6,23 +6,7 @@ const animelistUl = document.querySelector(".js_animelistUl");
 
 // DATOS DE LA APLICACIÓN
 
-const allAnimes = [
-  {
-    mal_id: 20,
-    image_url: "https://cdn.myanimelist.net/images/anime/1141/142503.jpg",
-    title: "Naruto",
-  },
-  {
-    mal_id: 16870,
-    image_url: "https://cdn.myanimelist.net/images/anime/1491/134498.jpg",
-    title: "The Last: Naruto the Movie",
-  },
-  {
-    mal_id: 28755,
-    image_url: "https://cdn.myanimelist.net/images/anime/4/78280.jpg",
-    title: "Boruto: Naruto the Movie",
-  },
-];
+let allAnimes = [];
 
 // FUNCIONES
 
@@ -47,4 +31,15 @@ function renderAllAnimes() {
   animelistUl.innerHTML = html; // Cuando tenemos todos los li los ponemos en la página
 }
 
-renderAllAnimes();
+// CUANDO CARGA LA PÁGINA
+
+//
+
+fetch(`https://api.jikan.moe/v4/anime`)
+  .then((res) => res.json())
+  .then((data) => {
+    console.log(data.data); //El console nos sirve para ver qué elemento dentro de data contiene el array de elementos que nos interesa
+    allAnimes = data.data;
+
+    renderAllAnimes();
+  });
