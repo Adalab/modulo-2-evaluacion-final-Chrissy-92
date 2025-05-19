@@ -16,7 +16,21 @@
     <header class="header">
       <h1 class="header__title">Buscador de Series de Anime</h1>
     </header>
-    <main class="main">Escribe aquí tu contenido...</main>
+    <main class="main">
+      <form class="form__anime">
+        <input
+          type="text"
+          class="search__input js-text-search-filter"
+          placeholder="Ejemplo: Naruto"
+        />
+        <button class="search__anime-btn js-btn-search">Buscar 🔍</button>
+        <button class="reset__anime-btn js-btn-reset">Reset</button>
+      </form>
+
+      <ul class="list__anime">
+        <!-- Aquí se mostrará la lista de animes -->
+      </ul>
+    </main>
     <script src="./js/main.js"></script>
   </body>
 </html>
