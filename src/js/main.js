@@ -1,8 +1,9 @@
 "use strict";
 
-console.log(">> Ready :)");
-
 const animelistUl = document.querySelector(".js_animelistUl");
+const textSearchInput = document.querySelector(".js-textSearchInput");
+const btnSearch = document.querySelector(".js-btnSearch");
+const btnReset = document.querySelector(".js-btnReset");
 
 // DATOS DE LA APLICACIÓN
 
@@ -14,7 +15,7 @@ function renderOneAnime(oneAnime) {
   const html = `
     <li class="anime__item" id=${oneAnime.id} >
     <h2 class="title__anime-item">${oneAnime.title}</h2>
-    <div class="anime__chromo">${oneAnime.image_url}</div>
+    <div class="anime__chromo">${oneAnime.images.jpg.image_url}</div>
     </li>
     `;
 
@@ -33,13 +34,27 @@ function renderAllAnimes() {
 
 // CUANDO CARGA LA PÁGINA
 
-//
-
 fetch(`https://api.jikan.moe/v4/anime`)
   .then((res) => res.json())
   .then((data) => {
-    console.log(data.data); //El console nos sirve para ver qué elemento dentro de data contiene el array de elementos que nos interesa
+    //console.log(data.data); El console nos sirve para ver qué elemento dentro de data contiene el array de elementos que nos interesa
     allAnimes = data.data;
 
     renderAllAnimes();
   });
+
+function handleClickSearchButton(ev) {
+  ev.preventDefault();
+
+  const searchByUser = textSearchInput.value;
+
+  fetch(`https://api.jikan.moe/v4/anime?q=${searchByUser}`)
+    .then((res) => res.json())
+    .then((data) => {
+      allAnimes = data.data;
+
+      renderAllAnimes();
+    });
+}
+
+btnSearch.addEventListener("click", handleClickSearchButton);
