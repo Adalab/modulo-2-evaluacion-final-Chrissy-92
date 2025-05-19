@@ -14,8 +14,10 @@ let allAnimes = [];
 function renderOneAnime(oneAnime) {
   const html = `
     <li class="anime__item" id=${oneAnime.id} >
+    <div class="anime__chromo">
     <h2 class="title__anime-item">${oneAnime.title}</h2>
-    <div class="anime__chromo">${oneAnime.images.jpg.image_url}</div>
+    <img src=${oneAnime.images.jpg.image_url} />
+    </div>
     </li>
     `;
 
@@ -58,3 +60,11 @@ function handleClickSearchButton(ev) {
 }
 
 btnSearch.addEventListener("click", handleClickSearchButton);
+
+// Pasamos al apartado 3. Favoritos
+// Consultar en qué imágenes tenemos qué reemplazar la url=
+// https://via.placeholder.com/210x295//666666/?text=TV.
+// 4. Bonus: Almacenamiento local
+// 5. Bonus: Borrar favoritos
+// 6. Bonus: Botón de reset
+// 7. Bonus: Afinar maquetación
