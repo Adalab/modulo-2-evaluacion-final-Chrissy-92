@@ -3,3 +3,25 @@
   margin: 0;
   padding: 0;
 }
+
+.main {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+}
+
+.form__anime {
+  margin-left: 0;
+  margin-inline-end: 60%;
+}
+
+.search__anime-results {
+  margin-right: 20%;
+  margin-left: 20%;
+  width: 40%;
+}
+
+.favoriteAnime {
+  background-color: goldenrod;
+  border: solid 5px gold;
+}
