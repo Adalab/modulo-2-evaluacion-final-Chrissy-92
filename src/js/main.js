@@ -19,16 +19,31 @@ let animeFavorites = [];
 // FUNCIONES
 
 function renderOneAnime(oneAnime) {
-  const html = `
-    <li class="anime__item js-animeLi" data-id=${oneAnime.mal_id}>
-      <div class="anime__chromo">
-        <h2 class="title__anime-item">${oneAnime.title}</h2>
-        <img src=${oneAnime.images.jpg.image_url} />
-      </div>
-    </li>
-  `;
+  const animePositionFromFavs = animeFavorites.findIndex(
+    (oneAnimeFav) => oneAnimeFav.mal_id === oneAnime.mal_id
+  );
 
-  return html;
+  if (animePositionFromFavs === -1) {
+    const html = `
+      <li class="anime__item js-animeLi" data-id=${oneAnime.mal_id}>
+        <div class="anime__chromo">
+          <h2 class="title__anime-item">${oneAnime.title}</h2>
+          <img src=${oneAnime.images.jpg.image_url} />
+        </div>
+      </li>
+    `;
+    return html;
+  } else {
+    const html = `
+      <li class="anime__item js-animeLi favoriteAnime" data-id=${oneAnime.mal_id}>
+        <div class="anime__chromo">
+          <h2 class="title__anime-item">${oneAnime.title}</h2>
+          <img src=${oneAnime.images.jpg.image_url} />
+        </div>
+      </li>
+    `;
+    return html;
+  }
 }
 
 function renderAllAnimes() {
@@ -44,6 +59,16 @@ function renderAllAnimes() {
   for (const animeLi of allAnimesLi) {
     animeLi.addEventListener("click", handleClickAnime);
   }
+}
+
+function renderAllAnimesFavs() {
+  let html = "";
+
+  for (const oneAnime of animeFavorites) {
+    html += renderOneAnime(oneAnime);
+  }
+
+  animelistfavoritesUl.innerHTML = html;
 }
 
 function handleClickAnime(ev) {
@@ -71,6 +96,9 @@ function handleClickAnime(ev) {
 
     // Agrega el objeto encontrado al array de animes favoritos
     animeFavorites.push(clickedAnimeSelected);
+
+    localStorage.setItem("favoritesAnimes", JSON.stringify(animeFavorites));
+
     console.log("allAnimes", allAnimes);
     console.log("animeFavorites", animeFavorites);
 
@@ -92,6 +120,15 @@ fetch(`https://api.jikan.moe/v4/anime`)
 
     renderAllAnimes();
   });
+
+// Obtenemos los animes favoritos desde el LS
+const favsFromLS = JSON.parse(localStorage.getItem("favoritesAnimes"));
+console.log(favsFromLS);
+
+if (favsFromLS !== null) {
+  animeFavorites = favsFromLS;
+  renderAllAnimesFavs();
+}
 
 function handleClickSearchButton(ev) {
   ev.preventDefault();
