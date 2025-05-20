@@ -79,34 +79,26 @@ function handleClickAnime(ev) {
 
   // Obtiene el id del atributo seleccionado y se aplica parseInt para pasar de string a número
   const anime_id = parseInt(clickedLi.dataset.id);
-  console.log("Valor del id", anime_id);
 
   const animePositionFromFavs = animeFavorites.findIndex(
     (oneAnime) => oneAnime.mal_id === anime_id
   );
-  console.log("Animes favoritos", animePositionFromFavs);
 
   if (animePositionFromFavs === -1) {
-    console.log("el anime no está en favoritos");
     // Recorre el array de animes comparando los id, se queda con el objeto que sea exactamente igual que el seleccionado por el usuario y lo devuelve
     const clickedAnimeSelected = allAnimes.find(
       (oneAnime) => oneAnime.mal_id === anime_id
     );
-    console.log("Anime clicado", clickedAnimeSelected);
-
     // Agrega el objeto encontrado al array de animes favoritos
     animeFavorites.push(clickedAnimeSelected);
-
     localStorage.setItem("favoritesAnimes", JSON.stringify(animeFavorites));
-
-    console.log("allAnimes", allAnimes);
-    console.log("animeFavorites", animeFavorites);
-
     // Generamos otro li para los animes seleccionados
     const htmlOneAnime = renderOneAnime(clickedAnimeSelected);
-
     // Añadimos los li seleccionados a la lista de favoritos
     animelistfavoritesUl.innerHTML += htmlOneAnime;
+  } else {
+    animeFavorites.splice(animePositionFromFavs, 1);
+    renderAllAnimesFavs();
   }
 }
 
@@ -123,13 +115,12 @@ fetch(`https://api.jikan.moe/v4/anime`)
 
 // Obtenemos los animes favoritos desde el LS
 const favsFromLS = JSON.parse(localStorage.getItem("favoritesAnimes"));
-console.log(favsFromLS);
 
 if (favsFromLS !== null) {
   animeFavorites = favsFromLS;
   renderAllAnimesFavs();
 }
-
+// Filtro con API
 function handleClickSearchButton(ev) {
   ev.preventDefault();
 
@@ -146,10 +137,8 @@ function handleClickSearchButton(ev) {
 
 btnSearch.addEventListener("click", handleClickSearchButton);
 
-// Pasamos al apartado 3. Favoritos
 // Consultar en qué imágenes tenemos qué reemplazar la url=
 // https://via.placeholder.com/210x295//666666/?text=TV.
-// 4. Bonus: Almacenamiento local
 // 5. Bonus: Borrar favoritos
 // 6. Bonus: Botón de reset
 // 7. Bonus: Afinar maquetación
