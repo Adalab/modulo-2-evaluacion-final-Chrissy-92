@@ -9,6 +9,7 @@ const btnReset = document.querySelector(".js-btnReset");
 // DATOS DE LA APLICACIÓN
 
 let allAnimes = [];
+let animeFavorites = [];
 
 // const imageBroke = "";
 // if (imageBroke !== oneAnime.images.jpg.image_url) {
@@ -53,21 +54,32 @@ function handleClickAnime(ev) {
 
   // Obtiene el id del atributo seleccionado y se aplica parseInt para pasar de string a número
   const anime_id = parseInt(clickedLi.dataset.id);
-  console.log(anime_id);
+  console.log("Valor del id", anime_id);
 
-  // Recorre el array de animes comparando los id, se queda con el que sea exactamente igual que el seleccionado por el usuario y lo devuelve
-  const clickedAnimeSelected = allAnimes.find(
+  const animePositionFromFavs = animeFavorites.findIndex(
     (oneAnime) => oneAnime.mal_id === anime_id
   );
+  console.log("Animes favoritos", animePositionFromFavs);
 
-  console.log(clickedAnimeSelected);
+  if (animePositionFromFavs === -1) {
+    console.log("el anime no está en favoritos");
+    // Recorre el array de animes comparando los id, se queda con el objeto que sea exactamente igual que el seleccionado por el usuario y lo devuelve
+    const clickedAnimeSelected = allAnimes.find(
+      (oneAnime) => oneAnime.mal_id === anime_id
+    );
+    console.log("Anime clicado", clickedAnimeSelected);
 
-  // Generamos otro li para los animes seleccionados
-  const htmlOneAnime = renderOneAnime(clickedAnimeSelected);
-  console.log(htmlOneAnime);
+    // Agrega el objeto encontrado al array de animes favoritos
+    animeFavorites.push(clickedAnimeSelected);
+    console.log("allAnimes", allAnimes);
+    console.log("animeFavorites", animeFavorites);
 
-  // Añadimos los li seleccionados a la lista de favoritos
-  animelistfavoritesUl.innerHTML += htmlOneAnime;
+    // Generamos otro li para los animes seleccionados
+    const htmlOneAnime = renderOneAnime(clickedAnimeSelected);
+
+    // Añadimos los li seleccionados a la lista de favoritos
+    animelistfavoritesUl.innerHTML += htmlOneAnime;
+  }
 }
 
 // CUANDO CARGA LA PÁGINA
