@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ejercicio de Evaluación Final</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    
+    <link rel="icon" href="./images/favicon.png" />
+    <script
+      src="https://kit.fontawesome.com/66349fc88a.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="./assets/index-32853ddc.css">
+  </head>
+
+  <body>
+    <header class="header">
+      <h1 class="header__title">Buscador de Series de Anime</h1>
+    </header>
+    <main class="main">
+      <form class="form__anime js-formAnime">
+        <input
+          type="text"
+          class="search__input js-textSearchInput"
+          placeholder="Ejemplo: Naruto"
+        />
+        <button class="search__anime-btn js-btnSearch">Buscar 🔍</button>
+        <button class="reset__anime-btn js-btnReset">Reset</button>
+      </form>
+
+      <section class="favorite__anime-series">
+        <article class="container__title-favs">
+          <h2 class="title__anime-favorites">Series favoritas</h2>
+        </article>
+        <ul class="list__anime-favorites js-animelistfavoritesUl">
+          <!-- Aquí se mostrará la lista de animes favoritos -->
+        </ul>
+      </section>
+
+      <section class="search__anime-results">
+        <article class="container__title-search">
+          <h2 class="title__anime-results">Resultados</h2>
+        </article>
+        <ul class="list__anime js-animelistUl">
+          <!-- Aquí se mostrará la lista de animes -->
+        </ul>
+      </section>
+    </main>
+    <script src="./js/main.js"></script>
+  </body>
+</html>
