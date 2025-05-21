@@ -1,5 +1,5 @@
 "use strict";
-
+const formAnime = document.querySelector(".js-formAnime");
 const animelistUl = document.querySelector(".js-animelistUl");
 const animelistfavoritesUl = document.querySelector(".js-animelistfavoritesUl");
 const textSearchInput = document.querySelector(".js-textSearchInput");
@@ -10,11 +10,6 @@ const btnReset = document.querySelector(".js-btnReset");
 
 let allAnimes = [];
 let animeFavorites = [];
-
-// const imageBroke = "";
-// if (imageBroke !== oneAnime.images.jpg.image_url) {
-//   imageBroke = `https://placehold.co/210x300/ffffff/555555?text=TV`;
-// }
 
 // FUNCIONES
 
@@ -37,7 +32,7 @@ function renderOneAnime(oneAnime) {
     const html = `
       <li class="anime__item js-animeLi favoriteAnime" data-id=${oneAnime.mal_id}>
         <div class="anime__chromo">
-          <span class="deleteIcon js-deleteIcon">
+          <span class="deleteIcon js-deleteIcon" id=${oneAnime.mal_id}>
             <i class="fa-solid fa-square-xmark"></i>
           </span>
           <h2 class="title__anime-item">${oneAnime.title}</h2>
@@ -50,15 +45,15 @@ function renderOneAnime(oneAnime) {
 }
 
 function renderAllAnimes() {
-  let html = ""; //Creamos la variable vacía con let
+  let html = "";
 
   for (const oneAnime of allAnimes) {
-    html += renderOneAnime(oneAnime); // Vamos acumulando aquí los li de cada uno de los elementos que genera oneAnime
+    html += renderOneAnime(oneAnime);
   }
 
-  animelistUl.innerHTML = html; // Cuando tenemos todos los li los ponemos en la página
+  animelistUl.innerHTML = html;
 
-  const allAnimesLi = document.querySelectorAll(".js-animeLi");
+  const allAnimesLi = document.querySelectorAll(".js-animelistUl .js-animeLi");
   for (const animeLi of allAnimesLi) {
     animeLi.addEventListener("click", handleClickAnime);
   }
@@ -72,6 +67,11 @@ function renderAllAnimesFavs() {
   }
 
   animelistfavoritesUl.innerHTML = html;
+
+  const deleteArray = document.querySelectorAll(".js-deleteIcon");
+  for (const eachCross of deleteArray) {
+    eachCross.addEventListener("click", handleClickCross);
+  }
 }
 
 function handleClickAnime(ev) {
@@ -95,16 +95,26 @@ function handleClickAnime(ev) {
     );
     // Agrega el objeto encontrado al array de animes favoritos
     animeFavorites.push(clickedAnimeSelected);
-    localStorage.setItem("favoritesAnimes", JSON.stringify(animeFavorites));
-    // Generamos otro li para los animes seleccionados
-    const htmlOneAnime = renderOneAnime(clickedAnimeSelected);
-    // Añadimos los li seleccionados a la lista de favoritos
-    animelistfavoritesUl.innerHTML += htmlOneAnime;
   } else {
     animeFavorites.splice(animePositionFromFavs, 1);
-    renderAllAnimesFavs();
   }
+
+  localStorage.setItem("favoritesAnimes", JSON.stringify(animeFavorites));
+  renderAllAnimesFavs();
 }
+
+const handleClickCross = (ev) => {
+  console.log("Has hecho click en un icono de cancelar");
+  const id = parseInt(ev.currentTarget.id);
+  console.log(id);
+  const deleteCrossIndex = animeFavorites.findIndex(
+    (oneAnime) => oneAnime.mal_id === id
+  );
+  console.log(deleteCrossIndex);
+  animeFavorites.splice(deleteCrossIndex, 1);
+  renderAllAnimesFavs();
+  renderAllAnimes();
+};
 
 // CUANDO CARGA LA PÁGINA
 
@@ -139,10 +149,16 @@ function handleClickSearchButton(ev) {
     });
 }
 
-btnSearch.addEventListener("click", handleClickSearchButton);
+function handleClickResetButton(ev) {
+  ev.preventDefault();
+  formAnime.reset();
+  animeFavorites = [];
+  localStorage.clear();
+  document
+    .querySelectorAll(".favoriteAnime")
+    .forEach((li) => li.classList.remove("favoriteAnime"));
+  renderAllAnimesFavs();
+}
 
-// Consultar en qué imágenes tenemos qué reemplazar la url=
-// https://via.placeholder.com/210x295//666666/?text=TV.
-// 5. Bonus: Borrar favoritos
-// 6. Bonus: Botón de reset
-// 7. Bonus: Afinar maquetación
+btnSearch.addEventListener("click", handleClickSearchButton);
+btnReset.addEventListener("click", handleClickResetButton);

@@ -1,9 +1,17 @@
 .search__anime-results {
-  max-width: 825px;
+  max-width: 855px;
+  border: solid 3px greenyellow;
+  border-radius: 10px;
+  padding: 10px;
+
+  .deleteIcon {
+    display: none;
+  }
 }
 
 .title__anime-results {
   text-align: center;
+  font-size: 2rem;
 }
 
 .list__anime {

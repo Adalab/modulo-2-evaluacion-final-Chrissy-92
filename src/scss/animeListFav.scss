@@ -7,8 +7,22 @@
   padding: 10px;
 }
 
+.favorite__anime-series {
+  border: solid 3px chocolate;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.title__anime-favorites {
+  text-align: center;
+  font-size: 2rem;
+}
+
 .list__anime-favorites {
   list-style: none;
+  margin-top: 10%;
+  margin-left: 15%;
+  margin-right: 25%;
 }
 
 .anime__item {
