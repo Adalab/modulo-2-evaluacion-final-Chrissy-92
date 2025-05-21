@@ -1,0 +1,22 @@
+.main {
+  display: grid;
+  grid-template-columns: auto 2fr;
+  grid-row: 1fr 2fr;
+  padding: 30px;
+}
+
+.form__anime {
+  grid-column: 1/2;
+  grid-row: 1/1;
+}
+
+.favorite__anime-series {
+  grid-column: 1/2;
+  grid-row: 2/2;
+  margin-right: 50px;
+}
+
+.search__anime-results {
+  grid-column: 2/3;
+  grid-row: 2/2;
+}

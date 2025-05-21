@@ -37,6 +37,9 @@ function renderOneAnime(oneAnime) {
     const html = `
       <li class="anime__item js-animeLi favoriteAnime" data-id=${oneAnime.mal_id}>
         <div class="anime__chromo">
+          <span class="deleteIcon js-deleteIcon">
+            <i class="fa-solid fa-square-xmark"></i>
+          </span>
           <h2 class="title__anime-item">${oneAnime.title}</h2>
           <img src=${oneAnime.images.jpg.image_url} />
         </div>
@@ -74,6 +77,7 @@ function renderAllAnimesFavs() {
 function handleClickAnime(ev) {
   // Detecta un elemento clicado por el usuario
   const clickedLi = ev.currentTarget;
+
   // AL elemento seleccionado, se le añade la clase favoriteAnime
   clickedLi.classList.toggle("favoriteAnime");
 
