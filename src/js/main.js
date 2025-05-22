@@ -10,6 +10,7 @@ const btnReset = document.querySelector(".js-btnReset");
 
 let allAnimes = [];
 let animeFavorites = [];
+const specialTypes = ["OVA", "Movie", "TV"];
 
 // FUNCIONES
 
@@ -23,6 +24,7 @@ function renderOneAnime(oneAnime) {
       <li class="anime__item js-animeLi" data-id=${oneAnime.mal_id}>
         <div class="anime__chromo">
           <h2 class="title__anime-item">${oneAnime.title}</h2>
+          <p class="js-type">${oneAnime.type}</p>
           <img src=${oneAnime.images.jpg.image_url} />
         </div>
       </li>
@@ -36,6 +38,7 @@ function renderOneAnime(oneAnime) {
             <i class="fa-solid fa-square-xmark"></i>
           </span>
           <h2 class="title__anime-item">${oneAnime.title}</h2>
+          <p class="js-type">${oneAnime.type}</p>
           <img src=${oneAnime.images.jpg.image_url} />
         </div>
       </li>
@@ -104,13 +107,10 @@ function handleClickAnime(ev) {
 }
 
 const handleClickCross = (ev) => {
-  console.log("Has hecho click en un icono de cancelar");
   const id = parseInt(ev.currentTarget.id);
-  console.log(id);
   const deleteCrossIndex = animeFavorites.findIndex(
     (oneAnime) => oneAnime.mal_id === id
   );
-  console.log(deleteCrossIndex);
   animeFavorites.splice(deleteCrossIndex, 1);
   renderAllAnimesFavs();
   renderAllAnimes();
@@ -121,7 +121,6 @@ const handleClickCross = (ev) => {
 fetch(`https://api.jikan.moe/v4/anime`)
   .then((res) => res.json())
   .then((data) => {
-    //console.log(data.data); El console nos sirve para ver qué elemento dentro de data contiene el array de elementos que nos interesan
     allAnimes = data.data;
 
     renderAllAnimes();
