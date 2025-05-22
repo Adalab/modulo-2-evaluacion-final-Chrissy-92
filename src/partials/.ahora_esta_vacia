@@ -1,0 +1,179 @@
+"use strict";
+const formAnime = document.querySelector(".js-formAnime");
+const animelistUl = document.querySelector(".js-animelistUl");
+const animelistfavoritesUl = document.querySelector(".js-animelistfavoritesUl");
+const textSearchInput = document.querySelector(".js-textSearchInput");
+const btnSearch = document.querySelector(".js-btnSearch");
+const btnReset = document.querySelector(".js-btnReset");
+
+// DATOS DE LA APLICACIÓN
+
+let allAnimes = [];
+let animeFavorites = [];
+
+// PARA CAMBIAR IMAGEN
+const defaultImg = 'https://placehold.co/210x300/ffffff/555555?text=TV'; // Creamos una variable con la URL que queramos insertar
+let srcUrl; // Creamos otra variable para guardar el resultado que nos de el if
+
+// Comprobamos con if la ruta de la imagen, en caso de que no la encuentre, asignamos la variable con la direcciòn de la imagen que queramos poner por defecto
+if(oneAnime.images && oneAnime.images.jpg && oneAnime.images.jpg.image_url) {
+  srcUrl = oneAnime.images.jpg.image_url;
+} else {
+  srcUrl = defaultImg;
+}
+
+// FUNCIONES
+
+function renderOneAnime(oneAnime) {
+  const animePositionFromFavs = animeFavorites.findIndex( // Busca el índice del elemento dentro del array de favoritos que coincida 
+    (oneAnimeFav) => oneAnimeFav.mal_id === oneAnime.mal_id
+  );
+
+  if (animePositionFromFavs === -1) {
+    const html = `
+      <li class="anime__item js-animeLi" data-id=${oneAnime.mal_id}>
+        <div class="anime__chromo">
+          <h2 class="title__anime-item">${oneAnime.title}</h2>
+          <img src="${srcUrl}" alt="${oneAnime.title}" /> // Se usa la variable que acabamos de crear para comparar las url de las imágenes y poner una u otra según sea el caso
+          <img src=${oneAnime.images.jpg.image_url} />
+        </div>
+      </li>
+    `;
+    return html;
+  } else {
+    const html = `
+      <li class="anime__item js-animeLi favoriteAnime" data-id=${oneAnime.mal_id}>
+        <div class="anime__chromo">
+          <span class="deleteIcon js-deleteIcon" id=${oneAnime.mal_id}>
+            <i class="fa-solid fa-square-xmark"></i> 
+          </span>
+          <h2 class="title__anime-item">${oneAnime.title}</h2>
+          <img src="${srcUrl}" alt="${oneAnime.title}" /> 
+          //<img src=${oneAnime.images.jpg.image_url} />
+        </div>
+      </li>
+    `;
+    return html;
+  }
+}
+
+function renderAllAnimes() {
+  let html = ""; //Comenzamos declarando una variable vacía con let para generar los animes
+
+  // Recorre el array de todos los animes y va pintando cada elemento, cada anime, 
+  //a cada anime le asignamos el nombre de oneAnime y se lo pasamos como parámetro a la función que lo pinta. 
+  for (const oneAnime of allAnimes) {
+    html += renderOneAnime(oneAnime);
+  }
+
+  animelistUl.innerHTML = html; // Añadimos cada anime a la variable html y una vez que termina el bucle for los renderiza todos en la lista de todos los animes
+
+  const allAnimesLi = document.querySelectorAll(".js-animelistUl .js-animeLi"); //Variable que recoge todos los elementos li de la lista de todos los animes
+  for (const animeLi of allAnimesLi) {
+    animeLi.addEventListener("click", handleClickAnime); // A cada elemento li antes seleccionado se le asigna una función manejadora de evento
+  }
+}
+
+function renderAllAnimesFavs() {
+  let html = ""; //Comenzamos declarando una variable vacía
+
+  // Recorremos el array animeFavorites y vamos pintando cada elemento, a cada elemento lo guardamos en la variable
+  //oneAnime y se lo pasamos como parámentro a la función que lo va a pintar
+  for (const oneAnime of animeFavorites) {
+    html += renderOneAnime(oneAnime);
+  }
+
+  animelistfavoritesUl.innerHTML = html; // Añadimos cada anime al array de los animes favoritos
+
+  // Declaramos una variable para recoger un array con todos los icnos de cruz, por cada querySelectorAll, se realiza un bucle for
+  const deleteArray = document.querySelectorAll(".js-deleteIcon"); 
+  for (const eachCross of deleteArray) {
+    eachCross.addEventListener("click", handleClickCross); // Recorremos el array y a cada icono le asignamos una función manejadora de evento
+  }
+}
+
+function handleClickAnime(ev) {
+  // Detecta un elemento clicado por el usuario
+  const clickedLi = ev.currentTarget;
+
+  // AL elemento seleccionado, se le añade la clase favoriteAnime
+  clickedLi.classList.toggle("favoriteAnime");
+
+  // Obtiene el id del atributo seleccionado y se aplica parseInt para pasar de string a número y podelos comparar más adelante
+  const anime_id = parseInt(clickedLi.dataset.id);
+
+  const animePositionFromFavs = animeFavorites.findIndex( // Recorremos el array de favoritos, devolvemos el índice que coincida con el elemento clicado y lo asignamos a la variable
+    (oneAnime) => oneAnime.mal_id === anime_id
+  );
+
+  if (animePositionFromFavs === -1) { // Si el elemento clicado no está dentro del array de animes favoritos:
+    // Recorre el array de todos los animes comparando los id, se queda con el objeto que sea exactamente igual que el seleccionado por el usuario y lo devuelve
+    const clickedAnimeSelected = allAnimes.find(
+      (oneAnime) => oneAnime.mal_id === anime_id
+    );
+    // Agrega el objeto seleccionado al array de animes favoritos
+    animeFavorites.push(clickedAnimeSelected);
+  } else { // Si el objeto ya está en animes favoritos, lo elimina
+    animeFavorites.splice(animePositionFromFavs, 1);
+  }
+
+  localStorage.setItem("favoritesAnimes", JSON.stringify(animeFavorites));
+  renderAllAnimesFavs(); // Renderizamos de nuevo la lista de animes favoritos
+}
+
+const handleClickCross = (ev) => {
+  const id = parseInt(ev.currentTarget.id); // Recogemos el id del icono clicado
+  const deleteCrossIndex = animeFavorites.findIndex( // Recorre el array de animes favoritos buscando el índice del icono clicado que coincida con el id del objeto anime que lo tiene asignado
+    (oneAnime) => oneAnime.mal_id === id
+  );
+  animeFavorites.splice(deleteCrossIndex, 1); // Elimina el anime seleccionado de la lista de favoritos
+  renderAllAnimesFavs(); // Volvemos a renderizar la lista de animes favoritos con la nueva actualización
+  renderAllAnimes(); // Volvemos a renderizar la lista de todos los animes con la nueva actualización
+};
+
+// CUANDO CARGA LA PÁGINA
+
+fetch(`https://api.jikan.moe/v4/anime`) // Nada más cargar la página, llamamos a nuestra API para que nos devuelva un array de objetos, en este caso animes con sus propiedades
+  .then((res) => res.json()) 
+  .then((data) => {
+    allAnimes = data.data; // En caso de que nuestra API nos devuelva un objeto, tenemos qué buscar el array de los objetos que nos interesan y ése array lo guardamos en una variable 
+
+    renderAllAnimes(); // Cuando llegan los datos del fetch los mostramos en la página
+  });
+
+// Obtenemos los animes favoritos desde el LS
+const favsFromLS = JSON.parse(localStorage.getItem("favoritesAnimes"));
+
+if (favsFromLS !== null) { 
+  animeFavorites = favsFromLS; // Guardamos los animes favoritos en la variable creada para almacenar datos en el LS
+  renderAllAnimesFavs(); // Renderizamos de nuevo la lista de favoritos para actualizar
+}
+
+// Filtro con API
+function handleClickSearchButton(ev) {
+  ev.preventDefault();
+
+  const searchByUser = textSearchInput.value; // Recogemos el valor que introduce el usuario en el campo de búsqueda
+
+  fetch(`https://api.jikan.moe/v4/anime?q=${searchByUser}`) // Apunta a la API en la que vamos a pedir los datos de búsqueda
+    .then((res) => res.json()) //
+    .then((data) => {
+      allAnimes = data.data; // Asignamos a una variable el elemento dentro de data que contiene el array de elementos que nos interesan
+
+      renderAllAnimes(); // Renderizamos de nuevo los animes que nos devuelva la búsqueda
+    });
+}
+
+function handleClickResetButton(ev) {
+  ev.preventDefault();
+  formAnime.reset(); // Reset al input
+  animeFavorites = []; // Vacía el array de animes favoritos
+  localStorage.clear(); // Limpia el historial en local storage
+  document
+    .querySelectorAll(".favoriteAnime") // Selecciona todos los elementos con la clase favorito
+    .forEach((li) => li.classList.remove("favoriteAnime")); // Quita la clase favorito del los li que la contengan
+  renderAllAnimesFavs(); // Vuelve a pintar la lista de la sección de favoritos vacía
+}
+
+btnSearch.addEventListener("click", handleClickSearchButton);
+btnReset.addEventListener("click", handleClickResetButton);
